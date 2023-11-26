@@ -116,7 +116,8 @@ export default defineComponent({
     gotoLogout() {
       localStorage.removeItem("email")
       localStorage.removeItem("logincode")
-      this.$router.replace()
+      const url = new URL('/pages/IndexPage.vue', window.location.origin)
+      window.location.href = url.toString()
     },
     gotoHome() {
       this.$router.push({ name: "Home" });
