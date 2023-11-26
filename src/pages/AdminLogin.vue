@@ -14,7 +14,7 @@
                   <div class="input-box">
                     <q-input color="primary" rounded outlined v-model="password" label="Password" type="password" />
                   </div>
-                  <button type="submit" class="btn" @click="gotoAdmin">
+                  <button type="submit" class="btn" @click="login">
                     Login
                   </button>
                   <div class="register-link">
@@ -56,13 +56,34 @@ export default defineComponent({
   },
 
   methods: {
-
     gotoLogin() {
       this.$router.push({ name: "Login" });
     },
     gotoAdmin() {
       this.$router.push({ name: "Admin" });
     },
+    async login() {
+      if (this.email.length == 0 && this.password.length == 0) {
+        console.log("Error");
+      }
+      else {
+        const loginres = await api.post("auth/login", {
+          email: this.email,
+          password: this.password
+        })
+        if (loginres.data.status_code == "001") {
+          this.$router.push({ name: "Admin" });
+          localStorage.setItem("logincode", loginres.data.status_code)
+          localStorage.setItem("email", loginres.data.user.email)
+        }
+        else {
+          this.$router.push({ name: "Home" });
+          localStorage.setItem("logincode", loginres.data.status_code)
+          localStorage.setItem("email", loginres.data.user.email)
+        }
+        //console.log(loginres)
+      }
+    }
   },
 });
 </script>

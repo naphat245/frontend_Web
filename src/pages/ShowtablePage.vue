@@ -171,7 +171,7 @@ const columns = [
   },
 ]
 
-const rows = [
+var rows = [
   {
     name: 'Sunday',
     t2030: 'A Band',
@@ -248,20 +248,194 @@ const rows = [
 
 export default defineComponent({
   name: "ShowtablePage",
-
-
-
   setup() {
     return {
       slide: ref(1),
       separator: ref('vertical'),
-      columns,
-      rows,
-
     };
   },
-
+  async mounted() {
+    // Call your function when the component is mounted
+    console.log("ty")
+    try {
+      const response = await this.$api.get('http://localhost:3000/admin/stage');
+      // Set the response data to the reactive variable
+      var data = response.data
+      data.forEach(element => {
+        if (element.start_date == "sunday") {
+          if (element.time_show == "20.30-21.30") {
+            this.rows[0].t2030 = element.band
+          }
+          if (element.time_show == "21.30-22.00") {
+            this.rows[0].t2130 = element.band
+          }
+          if (element.time_show == "22.00-23.00") {
+            this.rows[0].t2200 = element.band
+          }
+          if (element.time_show == "23.00-23.30") {
+            this.rows[0].t2300 = element.band
+          }
+          if (element.time_show == "23.30-00.30") {
+            this.rows[0].t2330 = element.band
+          }
+          if (element.time_show == "00.30-01.00") {
+            this.rows[0].t0030 = element.band
+          }
+          if (element.time_show == "01.00-02.00") {
+            this.rows[0].t0100 = element.band
+          }
+        }
+        if (element.start_date == "monday") {
+          if (element.time_show == "20.30-21.30") {
+            this.rows[1].t2030 = element.band
+          }
+          if (element.time_show == "21.30-22.00") {
+            this.rows[1].t2130 = element.band
+          }
+          if (element.time_show == "22.00-23.00") {
+            this.rows[1].t2200 = element.band
+          }
+          if (element.time_show == "23.00-23.30") {
+            this.rows[1].t2300 = element.band
+          }
+          if (element.time_show == "23.30-00.30") {
+            this.rows[1].t2330 = element.band
+          }
+          if (element.time_show == "00.30-01.00") {
+            this.rows[1].t0030 = element.band
+          }
+          if (element.time_show == "01.00-02.00") {
+            this.rows[1].t0100 = element.band
+          }
+        }
+        if (element.start_date == "tuesday") {
+          if (element.time_show == "20.30-21.30") {
+            this.rows[2].t2030 = element.band
+          }
+          if (element.time_show == "21.30-22.00") {
+            this.rows[2].t2130 = element.band
+          }
+          if (element.time_show == "22.00-23.00") {
+            this.rows[2].t2200 = element.band
+          }
+          if (element.time_show == "23.00-23.30") {
+            this.rows[2].t2300 = element.band
+          }
+          if (element.time_show == "23.30-00.30") {
+            this.rows[2].t2330 = element.band
+          }
+          if (element.time_show == "00.30-01.00") {
+            this.rows[2].t0030 = element.band
+          }
+          if (element.time_show == "01.00-02.00") {
+            this.rows[2].t0100 = element.band
+          }
+        }
+        if (element.start_date == "wednesday") {
+          if (element.time_show == "20.30-21.30") {
+            this.rows[3].t2030 = element.band
+          }
+          if (element.time_show == "21.30-22.00") {
+            this.rows[3].t2130 = element.band
+          }
+          if (element.time_show == "22.00-23.00") {
+            this.rows[3].t2200 = element.band
+          }
+          if (element.time_show == "23.00-23.30") {
+            this.rows[3].t2300 = element.band
+          }
+          if (element.time_show == "23.30-00.30") {
+            this.rows[3].t2330 = element.band
+          }
+          if (element.time_show == "00.30-01.00") {
+            this.rows[3].t0030 = element.band
+          }
+          if (element.time_show == "01.00-02.00") {
+            this.rows[3].t0100 = element.band
+          }
+        }
+        if (element.start_date == "thursday") {
+          if (element.time_show == "20.30-21.30") {
+            this.rows[4].t2030 = element.band
+          }
+          if (element.time_show == "21.30-22.00") {
+            this.rows[4].t2130 = element.band
+          }
+          if (element.time_show == "22.00-23.00") {
+            this.rows[4].t2200 = element.band
+          }
+          if (element.time_show == "23.00-23.30") {
+            this.rows[4].t2300 = element.band
+          }
+          if (element.time_show == "23.30-00.30") {
+            this.rows[4].t2330 = element.band
+          }
+          if (element.time_show == "00.30-01.00") {
+            this.rows[4].t0030 = element.band
+          }
+          if (element.time_show == "01.00-02.00") {
+            this.rows[4].t0100 = element.band
+          }
+        }
+        if (element.start_date == "firday") {
+          if (element.time_show == "20.30-21.30") {
+            this.rows[5].t2030 = element.band
+          }
+          if (element.time_show == "21.30-22.00") {
+            this.rows[5].t2130 = element.band
+          }
+          if (element.time_show == "22.00-23.00") {
+            this.rows[5].t2200 = element.band
+          }
+          if (element.time_show == "23.00-23.30") {
+            this.rows[5].t2300 = element.band
+          }
+          if (element.time_show == "23.30-00.30") {
+            this.rows[5].t2330 = element.band
+          }
+          if (element.time_show == "00.30-01.00") {
+            this.rows[5].t0030 = element.band
+          }
+          if (element.time_show == "01.00-02.00") {
+            this.rows[5].t0100 = element.band
+          }
+        }
+        if (element.start_date == "saturday") {
+          if (element.time_show == "20.30-21.30") {
+            this.rows[6].t2030 = element.band
+          }
+          if (element.time_show == "21.30-22.00") {
+            this.rows[6].t2130 = element.band
+          }
+          if (element.time_show == "22.00-23.00") {
+            this.rows[6].t2200 = element.band
+          }
+          if (element.time_show == "23.00-23.30") {
+            this.rows[6].t2300 = element.band
+          }
+          if (element.time_show == "23.30-00.30") {
+            this.rows[6].t2330 = element.band
+          }
+          if (element.time_show == "00.30-01.00") {
+            this.rows[6].t0030 = element.band
+          }
+          if (element.time_show == "01.00-02.00") {
+            this.rows[6].t0100 = element.band
+          }
+        }
+      });
+      console.log(response)
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  },
   methods: {
+  },
+  data() {
+    return {
+      columns,
+      rows,
+    }
   },
 });
 </script>

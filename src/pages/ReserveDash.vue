@@ -3,8 +3,6 @@
     <div class="flex justify-evenly" style="margin: 50px">
       <div class="Date-table q-pl-xl">
         <q-date color="red-10" v-model="date" landscape />
-        {{ reservaData }}
-
       </div>
 
       <!-- Number of Reservation Today  -->
@@ -297,6 +295,19 @@ export default defineComponent({
           }));
           return data
         } else {
+          this.reserveToday = this.reservaData.filter(item => item.reserve_date === this.date).map((reservation) => ({
+            reserveID: reservation.id,
+            reserveDate: reservation.reserve_date,
+            reserveName: reservation.reserve_name,
+            reserveTel: reservation.phone_number,
+            reserveEmail: reservation.email,
+            tableID: reservation.number_table,
+            specialNeed: reservation.special_needs,
+            status: reservation.status, // You might need to adjust this based on your data
+            // reserveEdit: "Edit", // You might need to adjust this based on your data
+          })).length;
+          this.weeklyReserve = this.reservaData.length;
+
           const data = this.reservaData.filter(item => item.reserve_date === this.date).map((reservation) => ({
             reserveID: reservation.id,
             reserveDate: reservation.reserve_date,
