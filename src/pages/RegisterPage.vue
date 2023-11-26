@@ -93,21 +93,15 @@ export default defineComponent({
     requiredValidate,
 
     onSubmit() {
-      if (!this.usernameCaption.showClass) {
-        Notify.create({
-          type: "negative",
-          message: "Username is already taken",
-        });
-        return;
-      }
       const data = {
         fullname: this.fullname,
         email: this.email,
+        name: this.username,
         username: this.username,
         password: this.password,
       };
       this.$api
-        .post("/auth/signup", data)
+        .post("/auth/register", data)
         .then((res) => {
           if (res.status == 200) {
             this.storeLogUser.userid = res.data.id;
@@ -137,7 +131,7 @@ export default defineComponent({
 
   watch: {
     username() {
-      this.usernameValidate();
+      //this.usernameValidate();
     },
   },
 });
