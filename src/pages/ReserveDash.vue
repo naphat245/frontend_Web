@@ -3,6 +3,8 @@
     <div class="flex justify-evenly" style="margin: 50px">
       <div class="Date-table q-pl-xl">
         <q-date color="red-10" v-model="date" landscape />
+        {{ date }}
+        {{ filteredRows }}
       </div>
 
       <!-- Number of Reservation Today  -->
@@ -81,6 +83,25 @@ import { api } from '../boot/axios'
 
 export default defineComponent({
   name: "ReserveDash",
+  data() {
+    return {
+      date: ''
+    }
+  },
+  computed: {
+    filteredRows() {
+      // Use the dateFilter to filter rows based on the reserveDate
+      const filteredDate = this.date
+
+      if (!filteredDate) {
+        // If no date filter, return all rows
+        return this.rows.values;
+      }
+
+      // Use the filter function to filter rows by reserveDate
+      return this.rows.filter(row => rows.value.reserveDate === filteredDate);
+    },
+  },
 
   setup() {
     const rows = ref([]);

@@ -47,11 +47,11 @@
 
       <!----------- Right Column ------------>
       <div class="column right-column" style="flex: 1">
-          <!-- Date Table Here -->
+        <!-- Date Table Here -->
         <div class="Date-table q-pl-xl">
           <q-date color="secondary" v-model="date" landscape />
         </div>
-          <!-- Show Number of customer selected -->
+        <!-- Show Number of customer selected -->
         <div class="selected-tables">
           <p class="Youhave">
             You have selected
@@ -64,8 +64,8 @@
             </li>
           </ul>
         </div>
-          <!-- Seserve form -->
-          <!-- Name -->
+        <!-- Seserve form -->
+        <!-- Name -->
         <q-form @submit.prevent="onSubmit" class="ReserveForm q-px-xl" ref="reserveForm">
           <q-input class="q-mb-md" v-model="reserveName" label="Your name" type="text" lazy-rules :rules="[
             (val) => (val && val.length > 0) || 'fill your username',
@@ -82,7 +82,7 @@
             <q-input v-model="reserveMoreNeed" label="More special need" filled autogrow />
           </div>
         </q-form>
-          <!-- Submit Button -->
+        <!-- Submit Button -->
         <div class="RS-btn">
           <q-btn rounded color="deep-orange" style="font-size: 25px; width: 300px" @click="reserveTables"><strong>Submit
               Reservation</strong>
@@ -98,6 +98,7 @@
 import { emailValidate, requiredValidate } from "../util/validation";
 import { defineComponent } from "vue";
 import { ref } from "vue";
+import axios, { api } from "src/boot/axios";
 
 export default defineComponent({
   name: "ReservationPage",
@@ -185,7 +186,20 @@ export default defineComponent({
       });
     },
 
-    reserveTables() {
+    async reserveTables() {
+      for (const table of this.selectedTables) {
+        const reserveCr = await api.post("admin/reserve", {
+          reserve_date: this.date,
+          reserve_name: this.reserveName,
+          phone_number: this.reserveTel,
+          email: this.reserveEmail,
+          number_table: table.name, // Use the current table's name
+          special_needs: this.reserveMoreNeed
+        });
+
+        // Handle the response or do something with reserveCr if needed
+        console.log(reserveCr);
+      }
       this.selectedTables.forEach((table) => {
         table.booked = true;
         table.selected = false;
