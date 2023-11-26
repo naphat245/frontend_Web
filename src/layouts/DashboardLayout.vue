@@ -5,7 +5,7 @@
         <div class="title q-mx-auto q-my-md">
           <strong>Admin Dashboard Page</strong>
         </div>
-        <q-btn push color="orange-5" round icon="logout" @click="gotoHome" />
+        <q-btn push color="orange-5" round icon="logout" @click="gotoLogout" />
       </q-toolbar>
       <q-tabs v-model="tab" class="">
         <q-tab alert="red" name="MNG-reserves" icon="style" label="Reservations" @click="gotoAdmin" />

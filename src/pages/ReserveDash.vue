@@ -3,8 +3,8 @@
     <div class="flex justify-evenly" style="margin: 50px">
       <div class="Date-table q-pl-xl">
         <q-date color="red-10" v-model="date" landscape />
-        {{ date }}
-        {{ filteredRows }}
+        {{ reservaData }}
+
       </div>
 
       <!-- Number of Reservation Today  -->
@@ -35,7 +35,7 @@
       <h2 style="margin-bottom: 0px">Reservation Dashboard</h2>
     </div>
     <div class="q-pa-sm">
-      <q-table title="Edit Reservation" :rows="rows" :columns="columns" row-key="id">
+      <q-table title="Edit Reservation" :rows="showData()" :columns="this.columns" row-key="id">
         <template v-slot:body-cell-status="props">
           <q-td :props="props">
             <div>
@@ -77,114 +77,134 @@
 
 <script>
 import { defineComponent } from "vue";
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { Dialog } from "quasar";
 import { api } from '../boot/axios'
 
 export default defineComponent({
   name: "ReserveDash",
+  // setup() {
+  //   const selectDate = ref("")
+  //   const rows = ref([]);
+  //   const columns = [
+  //     {
+  //       name: "reserveID",
+  //       required: true,
+  //       label: "Reserve ID",
+  //       align: "left",
+  //       field: "reserveID",
+  //       // field: (row) => row.name,
+  //       format: (val) => `${val}`,
+  //       sortable: true,
+  //     },
+  //     { name: "reserveDate", align: "center", label: "Date", field: "reserveDate", style: 'max-width: 100px' },
+  //     { name: "reserveName", align: "center", label: "Reserve Name", field: "reserveName" },
+  //     { name: "reserveTel", align: "center", label: "Phone Number", field: "reserveTel" },
+  //     { name: "reserveEmail", align: "center", label: "E-mail", field: "reserveEmail" },
+  //     { name: "tableID", align: "center", label: "Table", field: "tableID", style: 'min-width: 100px' },
+  //     { name: "specialNeed", align: "center", label: "Special Needs", field: "specialNeed", style: 'max-width: 200px' },
+  //     { name: "status", align: "center", label: "Status", field: "status" },
+  //     {
+  //       name: "reserveEdit", align: "center", label: "Edit", field: "reserveEdit", style: 'max-width: 100px',
+  //       "edit-action": true, "delete-action": true, "custom": true,
+  //     },
+  //   ];
+  //   const fetchData = async () => {
+  //     try {
+  //       console.log(selectDate.value);
+  //       const response = await api.get("/admin/reserve");
+  //       console.log(response.data);
+  //       rows.value = response.data.filter(item => item.reserve_date === selectDate.value).map((reservation) => ({
+  //         reserveID: reservation.id,
+  //         reserveDate: reservation.reserve_date,
+  //         reserveName: reservation.reserve_name,
+  //         reserveTel: reservation.phone_number,
+  //         reserveEmail: reservation.email,
+  //         tableID: reservation.number_table,
+  //         specialNeed: reservation.special_needs,
+  //         status: reservation.status, // You might need to adjust this based on your data
+  //         // reserveEdit: "Edit", // You might need to adjust this based on your data
+  //       }));
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   const editRow = (row) => {
+  //     // Set the initial values in the edit form
+  //     editFormData.value = { ...row };
+  //     // Show the edit form dialog
+  //     showEditDialog.value = true;
+  //   };
+  //   const submitEditForm = async () => {
+  //     try {
+  //       // Make an API request to update the reservation
+  //       const response = await api.put(`/admin/reserve/${editFormData.value.reserveID}`, editFormData.value);
+  //       // Handle the response as needed
+  //       console.log('Reservation updated:', response.data);
+
+  //       // Refresh the data after the edit
+  //       fetchData();
+
+  //       // Close the edit form dialog
+  //       showEditDialog.value = false;
+  //     } catch (error) {
+  //       console.error('Error updating reservation:', error);
+  //     }
+  //   };
+  //   const cancelEdit = () => {
+  //     // Close the edit form dialog without saving
+  //     showEditDialog.value = false;
+  //   };
+  //   onMounted(() => {
+  //     fetchData();
+  //   });
+  //   return {
+  //     confirm: ref(false),
+  //     fetchData,
+  //     rows,
+  //     columns,
+  //     editRow,
+  //     submitEditForm,
+  //     cancelEdit,
+  //     selectDate
+  //   };
+  // },
   data() {
     return {
-      date: ''
+      date: "",
+      reservaData: "",
+      columns: [
+        {
+          name: "reserveID",
+          required: true,
+          label: "Reserve ID",
+          align: "left",
+          field: "reserveID",
+          // field: (row) => row.name,
+          format: (val) => `${val}`,
+          sortable: true,
+        },
+        { name: "reserveDate", align: "center", label: "Date", field: "reserveDate", style: 'max-width: 100px' },
+        { name: "reserveName", align: "center", label: "Reserve Name", field: "reserveName" },
+        { name: "reserveTel", align: "center", label: "Phone Number", field: "reserveTel" },
+        { name: "reserveEmail", align: "center", label: "E-mail", field: "reserveEmail" },
+        { name: "tableID", align: "center", label: "Table", field: "tableID", style: 'min-width: 100px' },
+        { name: "specialNeed", align: "center", label: "Special Needs", field: "specialNeed", style: 'max-width: 200px' },
+        { name: "status", align: "center", label: "Status", field: "status" },
+        {
+          name: "reserveEdit", align: "center", label: "Edit", field: "reserveEdit", style: 'max-width: 100px',
+          "edit-action": true, "delete-action": true, "custom": true,
+        },
+      ],
     }
   },
-  computed: {
-    filteredRows() {
-      // Use the dateFilter to filter rows based on the reserveDate
-      const filteredDate = this.date
+  computed() {
 
-      if (!filteredDate) {
-        // If no date filter, return all rows
-        return this.rows.values;
-      }
 
-      // Use the filter function to filter rows by reserveDate
-      return this.rows.filter(row => rows.value.reserveDate === filteredDate);
-    },
   },
+  async mounted() {
+    this.reservaData = await api.get("/admin/reserve").then(res => res.data);
 
-  setup() {
-    const rows = ref([]);
-    const columns = [
-      {
-        name: "reserveID",
-        required: true,
-        label: "Reserve ID",
-        align: "left",
-        field: "reserveID",
-        // field: (row) => row.name,
-        format: (val) => `${val}`,
-        sortable: true,
-      },
-      { name: "reserveDate", align: "center", label: "Date", field: "reserveDate", style: 'max-width: 100px' },
-      { name: "reserveName", align: "center", label: "Reserve Name", field: "reserveName" },
-      { name: "reserveTel", align: "center", label: "Phone Number", field: "reserveTel" },
-      { name: "reserveEmail", align: "center", label: "E-mail", field: "reserveEmail" },
-      { name: "tableID", align: "center", label: "Table", field: "tableID", style: 'min-width: 100px' },
-      { name: "specialNeed", align: "center", label: "Special Needs", field: "specialNeed", style: 'max-width: 200px' },
-      { name: "status", align: "center", label: "Status", field: "status" },
-      {
-        name: "reserveEdit", align: "center", label: "Edit", field: "reserveEdit", style: 'max-width: 100px',
-        "edit-action": true, "delete-action": true, "custom": true,
-      },
-    ];
-    const fetchData = async () => {
-      try {
-        const response = await api.get("/admin/reserve");
-        console.log(response.data);
-        rows.value = response.data.map((reservation) => ({
-          reserveID: reservation.id,
-          reserveDate: reservation.reserve_date,
-          reserveName: reservation.reserve_name,
-          reserveTel: reservation.phone_number,
-          reserveEmail: reservation.email,
-          tableID: reservation.number_table,
-          specialNeed: reservation.special_needs,
-          status: reservation.status, // You might need to adjust this based on your data
-          // reserveEdit: "Edit", // You might need to adjust this based on your data
-        }));
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    const editRow = (row) => {
-      // Set the initial values in the edit form
-      editFormData.value = { ...row };
-      // Show the edit form dialog
-      showEditDialog.value = true;
-    };
-    const submitEditForm = async () => {
-      try {
-        // Make an API request to update the reservation
-        const response = await api.put(`/admin/reserve/${editFormData.value.reserveID}`, editFormData.value);
-        // Handle the response as needed
-        console.log('Reservation updated:', response.data);
-
-        // Refresh the data after the edit
-        fetchData();
-
-        // Close the edit form dialog
-        showEditDialog.value = false;
-      } catch (error) {
-        console.error('Error updating reservation:', error);
-      }
-    };
-    const cancelEdit = () => {
-      // Close the edit form dialog without saving
-      showEditDialog.value = false;
-    };
-    onMounted(() => {
-      fetchData();
-    });
-    return {
-      confirm: ref(false),
-      fetchData,
-      rows,
-      columns,
-      editRow,
-      submitEditForm,
-      cancelEdit
-    };
   },
 
   // data() {
@@ -261,6 +281,38 @@ export default defineComponent({
     // editRow(row) {
     //   console.log('Edit action for row:', row);
     // },
+    showData() {
+      if (this.reservaData) {
+        if (this.date === "") {
+          const data = this.reservaData.map((reservation) => ({
+            reserveID: reservation.id,
+            reserveDate: reservation.reserve_date,
+            reserveName: reservation.reserve_name,
+            reserveTel: reservation.phone_number,
+            reserveEmail: reservation.email,
+            tableID: reservation.number_table,
+            specialNeed: reservation.special_needs,
+            status: reservation.status, // You might need to adjust this based on your data
+            // reserveEdit: "Edit", // You might need to adjust this based on your data
+          }));
+          return data
+        } else {
+          const data = this.reservaData.filter(item => item.reserve_date === this.date).map((reservation) => ({
+            reserveID: reservation.id,
+            reserveDate: reservation.reserve_date,
+            reserveName: reservation.reserve_name,
+            reserveTel: reservation.phone_number,
+            reserveEmail: reservation.email,
+            tableID: reservation.number_table,
+            specialNeed: reservation.special_needs,
+            status: reservation.status, // You might need to adjust this based on your data
+            // reserveEdit: "Edit", // You might need to adjust this based on your data
+          }));
+          return data
+        }
+      } else[]
+
+    },
     deleteRow(row) {
       Dialog.create({
         title: "Delete Confirmation",

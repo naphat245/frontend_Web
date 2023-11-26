@@ -6,6 +6,7 @@
         <div class="q-mx-auto q-py-sm">
           <img href="/" src="/icon/SeatBarLogo_small.png" @click="gotoHome" />
         </div>
+
       </q-toolbar>
       <q-tabs v-model="tab" class="center">
         <q-btn flat rounded color="white" label="Promotion" style="font-size: 20px;" @click="gotoNews" />
@@ -70,14 +71,17 @@
             </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple class="q-mt-md" @click="gotoAdminLogin">
-            <q-item-section avatar>
-              <q-icon name="edit" />
-            </q-item-section>
-            <q-item-section>
-              Admin
-            </q-item-section>
-          </q-item>
+
+          <div v-if="email">
+            <q-item clickable v-ripple class="q-mt-md" @click="gotoLogout">
+              <q-item-section avatar>
+                <q-icon name="logout" />
+              </q-item-section>
+              <q-item-section>
+                Logout
+              </q-item-section>
+            </q-item>
+          </div>
 
         </q-list>
       </q-scroll-area>
@@ -107,7 +111,13 @@ export default defineComponent({
     };
   },
 
+
   methods: {
+    gotoLogout() {
+      localStorage.removeItem("email")
+      localStorage.removeItem("logincode")
+      this.$router.replace()
+    },
     gotoHome() {
       this.$router.push({ name: "Home" });
     },
