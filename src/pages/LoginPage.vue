@@ -9,12 +9,12 @@
                 <q-form @submit.prevent="onSubmit" class="q-gutter-md" ref="myLoginForm">
                   <h1>Login</h1>
                   <div class="input-box">
-                    <q-input color="primary" rounded outlined v-model="username" label="Username" type="text" />
+                    <q-input color="primary" rounded outlined v-model="email" label="Email" type="email" />
                   </div>
                   <div class="input-box">
                     <q-input color="primary" rounded outlined v-model="password" label="Password" type="password" />
                   </div>
-                  <button type="submit" class="btn" @click="gotoHome">
+                  <button type="submit" class="btn" @click="login">
                     Login
                   </button>
                   <div class="register-link">
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import axios, { api } from "src/boot/axios";
 import { defineComponent } from "vue";
 import { ref } from 'vue';
 
@@ -40,7 +41,8 @@ export default defineComponent({
 
   data() {
     return {
-
+      email: "",
+      password: ""
     };
   },
 
@@ -52,7 +54,6 @@ export default defineComponent({
 
   methods: {
 
-
     gotoReserve() {
       this.$router.push({ name: "Reserve" });
     },
@@ -62,6 +63,28 @@ export default defineComponent({
     gotoRegister() {
       this.$router.push({ name: "Register" });
     },
+    async login() {
+      if (this.email.length == 0 && this.password.length == 0) {
+        console.log("Error");
+      }
+      else {
+        const loginres = await api.post("auth/login", {
+          email: this.email,
+          password: this.password
+        })
+        if(loginres.data.status_code == "001"){
+          this.$router.push({ name: "Admin" });
+          localStorage.setItem("logincode",loginres.data.status_code)
+          localStorage.setItem("email",loginres.data.user.email)
+        }
+        else{
+          this.$router.push({ name: "Home" });
+          localStorage.setItem("logincode",loginres.data.status_code)
+          localStorage.setItem("email",loginres.data.user.email)
+        }
+        //console.log(loginres)
+      }
+    }
   },
 });
 </script>

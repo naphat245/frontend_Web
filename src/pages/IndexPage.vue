@@ -39,10 +39,25 @@ export default defineComponent({
 
   methods: {
     gotoReserve() {
-      this.$router.push({ name: "Reserve" });
+      const value = localStorage.getItem("logincode")
+      console.log(value)
+      if (value != undefined) {
+        this.$router.push({ name: "Reserve" });
+      }
+      else {
+        this.$router.push({ name: "Login" });
+      }
+      //this.$router.push({ name: "Reserve" });
     },
     gotoLogin() {
-      this.$router.push({ name: "Login" });
+      const value = localStorage.getItem("logincode")
+      console.log(value)
+      if (value) {
+        this.$router.push({ name: "Reserve" });
+      }
+      else {
+        this.$router.push({ name: "Login" });
+      };
     },
   },
 });

@@ -21,14 +21,36 @@
       <q-scroll-area class="fit">
         <q-list padding class="menu-list">
 
-          <q-item clickable v-ripple @click="gotoLogin">
+          <div v-if="email">
+            <q-item v-ripple>
+              <q-item-section avatar>
+                <q-icon name="person" />
+              </q-item-section>
+              <q-item-section>
+                {{ email }}
+              </q-item-section>
+            </q-item>
+          </div>
+          <div v-else>
+            <q-item clickable v-ripple @click="gotoLogin">
+              <q-item-section avatar>
+                <q-icon name="person" />
+              </q-item-section>
+              <q-item-section>
+                Login
+              </q-item-section>
+            </q-item>
+          </div>
+
+
+          <!-- <q-item clickable v-ripple @click="gotoLogin">
             <q-item-section avatar>
               <q-icon name="person" />
             </q-item-section>
             <q-item-section>
-              Login
+              {{ email }}
             </q-item-section>
-          </q-item>
+          </q-item> -->
 
           <q-item active clickable v-ripple @click="gotoRegister">
             <q-item-section avatar>
@@ -72,7 +94,12 @@ import { defineComponent, ref } from "vue";
 
 export default defineComponent({
   name: "MainLayout",
+  data() {
+    return {
+      email: localStorage.getItem('email')
 
+    }
+  },
   setup() {
 
     return {
@@ -85,7 +112,14 @@ export default defineComponent({
       this.$router.push({ name: "Home" });
     },
     gotoReserve() {
-      this.$router.push({ name: "Reserve" });
+      const value = localStorage.getItem("logincode")
+      console.log(value)
+      if (value != undefined) {
+        this.$router.push({ name: "Reserve" });
+      }
+      else {
+        this.$router.push({ name: "Login" });
+      };
     },
     gotoLogin() {
       this.$router.push({ name: "Login" });
